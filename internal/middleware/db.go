@@ -22,10 +22,11 @@ func AssignDBSession(gtx *gin.Context) {
 }
 
 func CloseDBSession(gtx *gin.Context) {
-	gtx.Next()
+	defer func() {
+		if session, ok := ctv.Get[interface{ Close() }](gtx, ctv.DBSession); ok {
+			session.Close()
+		}
+	}()
 
-	session, ok := ctv.Get[interface{ Close() }](gtx, ctv.DBSession)
-	if ok {
-		session.Close()
-	}
+	gtx.Next()
 }
