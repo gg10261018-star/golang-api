@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/example/golang-api/app/points"
 	"github.com/example/golang-api/app/user"
 	"github.com/example/golang-api/app/weather"
 	"github.com/example/golang-api/internal/middleware"
@@ -18,7 +19,7 @@ func main() {
 	}
 
 	// 天氣排程：啟動時立即執行一次，之後每 24 小時更新
-	weather.StartScheduler()
+	//weather.StartScheduler()
 
 	engine := gin.New()
 	engine.Use(gin.Recovery())
@@ -37,6 +38,7 @@ func main() {
 	{
 		user.RouterProtected(protected)
 		weather.RouterProtected(protected)
+		points.RouterProtected(protected)
 	}
 
 	if err := engine.Run(":" + env.Getenv("PORT", "8080")); err != nil {
